@@ -16,12 +16,18 @@ POSTGRES_DB=*
 
 ## Boot
 
-### Terminal
-
-If you have postgres running on your local machine, then in the root of the folder of the project run,
+First, in the root of the project, install all dependencies:
 
 ```
-npm run install:all && npm run dev
+npm run install:all
+```
+
+### Terminal
+
+If you have postgres running on your local machine, then run,
+
+```
+npm run dev
 ```
 
 ### Docker
