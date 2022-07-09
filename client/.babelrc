@@ -1,0 +1,12 @@
+{
+	"plugins": [
+		[
+			"@emotion",
+			{
+				"sourceMap": false,
+				"autoLabel": "always"
+				// "labelFormat": "[filename]__[local]"
+			}
+		]
+	]
+}

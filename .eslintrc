@@ -1,0 +1,13 @@
+{
+	"parser": "@babel/eslint-parser",
+	"rules": {
+		"comma-dangle": 0,
+		"no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+	},
+	"plugins": ["prettier"],
+	"parserOptions": {
+		"requireConfigFile": false
+	},
+	"extends": "prettier",
+	"ignorePatterns": ["client/"]
+}

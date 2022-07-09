@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"outDir": "",
+		"noImplicitAny": false,
+		"module": "commonjs",
+		"target": "es5",
+		"lib": ["esnext", "dom", "dom.iterable"],
+		"removeComments": true,
+		"allowSyntheticDefaultImports": true,
+		"jsx": "react",
+		"allowJs": true,
+		"baseUrl": "./",
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "node",
+		"noEmit": false,
+		"downlevelIteration": true,
+		"paths": {
+			// "components/*": ["src/components/*"],
+			// "features/*": ["src/features/*"],
+		}
+	},
+	"include": ["./src", "./webpack.config.ts"]
+}
