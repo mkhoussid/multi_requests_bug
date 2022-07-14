@@ -1,1 +1,1 @@
-export { default as verifyAdminSessionId } from './verifyAdminSessionId';
+export { default as checkSession } from './checkSession';

@@ -1,5 +1,5 @@
-import adminRoutes from './admin';
+import coreRoutes from './core';
 
-const routes = [...adminRoutes];
+const routes = [...coreRoutes];
 
 export default routes;

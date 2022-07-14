@@ -1,7 +1,7 @@
-import adminController from './admin';
+import coreController from './core';
 
 const controllers = {
-	adminController,
+	coreController,
 };
 
 export default controllers;

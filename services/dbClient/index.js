@@ -1,7 +1,9 @@
 import fastifyPlugin from 'fastify-plugin';
 import { Client } from 'pg';
-import { errorHandler, errorMatrix } from '../../utils';
 import dotenv from 'dotenv';
+import pgStore from 'connect-pg-simple';
+import fastifyCookie from '@fastify/cookie';
+import fastifySession from '@fastify/session';
 dotenv.config();
 
 const client = new Client({
@@ -23,20 +25,53 @@ const dbConnector = async (app, b, done) => {
 			return { client };
 		});
 
-		await client.query(`CREATE SCHEMA IF NOT EXISTS multi_requests`);
-		await client.query(`
-			CREATE TABLE IF NOT EXISTS multi_requests.user (
-				id serial PRIMARY KEY,
-				email VARCHAR (255) UNIQUE NOT NULL,
-				password VARCHAR (255) NOT NULL,
-				created_at TIMESTAMP NOT NULL,
-				updated_at TIMESTAMP NOT NULL
-			)
+		const { rows } = await client.query(`
+			SELECT EXISTS (
+				SELECT FROM information_schema.tables 
+				WHERE  table_schema = 'undefined_session'
+				AND    table_name   = 'session'
+			);
 		`);
+
+		if (!rows[0].exists) {
+			await client.query(`CREATE SCHEMA IF NOT EXISTS undefined_session`);
+			await client.query(`
+			CREATE TABLE IF NOT EXISTS undefined_session.session (
+				"sid" varchar NOT NULL COLLATE "default",
+				"sess" json NOT NULL,
+				"expire" timestamp(6) NOT NULL
+			)
+			WITH (OIDS=FALSE);
+			
+			ALTER TABLE undefined_session.session ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+			
+			CREATE INDEX "IDX_session_expire" ON undefined_session.session ("expire");
+		`);
+		}
+
+		const PgSessionStore = pgStore(fastifySession);
+		const store = new PgSessionStore({
+			tableName: 'session',
+			schemaName: 'undefined_session',
+			pool: client,
+		});
+
+		app.register(fastifyCookie);
+		app.register(fastifySession, {
+			secret: '1'.repeat(32).length,
+			saveUninitialized: false,
+			cookie: {
+				httpOnly: true,
+				maxAge: 2592000000,
+				secure: false,
+			},
+			expires: 1800000,
+			store,
+		});
 
 		done();
 	} catch (err) {
-		errorHandler({ err, functionName: 'dbConnector', level: errorMatrix.LEVELS.ERROR });
+		console.log('err in dbconnect', err);
 	}
 };
 
